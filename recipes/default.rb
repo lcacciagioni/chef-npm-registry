@@ -43,7 +43,7 @@ __file_exists = File.exists?(_couchdb['couch'])
 
 http_request 'create registry database' do
   url _registry['url']
-  not_if { File.exists?(_couchdb['couch']) }
+  not_if { __file_exists }
   action :put
 end
 
@@ -95,7 +95,7 @@ bash 'COPY _design/app' do
   code <<-EOH
     curl #{_registry['url']}/_design/scratch -X COPY -H destination:'_design/app'
   EOH
-  not_if { File.exists?(_couchdb['couch']) }
+  not_if { __file_exists }
 end
 
 execute "couchapp push www/app.js #{_registry['url']}" do
