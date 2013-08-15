@@ -17,18 +17,8 @@
 #
 
 require 'minitest/spec'
-require 'net/http'
+require File.expand_path('../support/helpers', __FILE__)
 
 describe_recipe 'npm_registry::default' do
-	it 'should receive status 200 on /_replicator' do
-		assert_equal 200, Net::HTTP.get_response(URI("#{node['npm_registry']['registry']['url']}/_replicator")).code
-	end
-
-	it 'should receive status 200 on /_replicator/_design/_replicator' do
-		assert_equal 200, Net::HTTP.get_response(URI("#{node['npm_registry']['registry']['url']}/_replicator")).code
-	end
-
-	it 'should receive status 200 on /registry' do
-		assert_equal 200, Net::HTTP.get_response(URI("#{node['npm_registry']['registry']['url']}/registry")).code
-	end
+  include Helpers::NPM_Registry
 end
