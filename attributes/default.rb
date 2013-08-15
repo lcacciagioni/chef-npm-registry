@@ -21,8 +21,8 @@ default['npm_registry']['git']['url']                      = 'https://github.com
 default['npm_registry']['git']['reference']                = 'master'
 
 default['npm_registry']['couchdb']['couch']                = '/usr/local/var/lib/couchdb/registry.couch'
-default['npm_registry']['couchdb']['username']             = 'admin'
-default['npm_registry']['couchdb']['password']             = 'admin'
+default['npm_registry']['couchdb']['username']             = ''
+default['npm_registry']['couchdb']['password']             = ''
 default['npm_registry']['couchdb']['port']                 = '5984'
 
 default['npm_registry']['registry']['url']                 = 'http://localhost:5984/registry'
