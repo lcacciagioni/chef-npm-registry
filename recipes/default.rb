@@ -113,7 +113,7 @@ if _replication['use_replication'] && _cron['use_cron']
   end
 
   cron_d 'npm_registry' do
-    action _replication['use_replication'] && _cron['use_cron'] ? :create : :delete
+    action :create
     minute _cron['minute']
     hour _cron['hour']
     weekday _cron['weekday']
