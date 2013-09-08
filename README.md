@@ -82,6 +82,14 @@ Once the above are installed, you should be able to run Test Kitchen:
     kitchen list
     kitchen test
 
+Install foodcritic
+
+	gem install foodcritic
+
+Run foodcritic:
+
+	rake lint
+
 License
 =======
 
