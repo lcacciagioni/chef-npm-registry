@@ -66,6 +66,10 @@ Install Gem dependencies:
 
 	bundle install
 
+Install Cookbook dependencies:
+
+	berks install
+
 Run Bundler:
 
 	bundle exec strainer test
