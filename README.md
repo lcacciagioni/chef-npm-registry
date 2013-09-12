@@ -62,6 +62,10 @@ Install Vagrant:
 
 	http://downloads.vagrantup.com/
 
+Install Gem dependencies:
+
+	bundle install
+
 Run Bundler:
 
 	bundle exec strainer test
