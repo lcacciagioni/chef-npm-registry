@@ -56,53 +56,12 @@ To use replication with cron, use:
 Testing
 =======
 
-This cookbook includes support for running tests via Test Kitchen (1.0). This has some requirements.
+This cookbook includes support for running tests via FoodCritic, ChefSpec and Test Kitchen.
 
-1. You must be using the Git repository, rather than the downloaded cookbook from the Chef Community Site.
-2. You must have Vagrant 1.1 installed.
-3. You must have a "sane" Ruby 1.9.3 environment.
+Install Vagrant:
 
-Once the above requirements are met, install the additional requirements:
+	http://downloads.vagrantup.com/
 
-Install the berkshelf plugin for vagrant, and berkshelf to your local Ruby environment.
+Run Bundler:
 
-    vagrant plugin install vagrant-berkshelf
-    gem install berkshelf
-
-Install Test Kitchen 1.0 (unreleased yet, use the alpha / prerelease version).
-
-    gem install test-kitchen --pre
-
-Install the Vagrant driver for Test Kitchen.
-
-    gem install kitchen-vagrant
-
-Once the above are installed, you should be able to run Test Kitchen:
-
-    kitchen list
-    kitchen test
-
-Install foodcritic
-
-	gem install foodcritic
-
-Run foodcritic:
-
-	rake lint
-
-License
-=======
-
-Copyright 2013 Cory Roloff
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+	bundle exec strainer test

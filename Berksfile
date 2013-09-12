@@ -2,9 +2,10 @@ site :opscode
 
 metadata
 
-cookbook "apt"
-cookbook "cron"
+cookbook 'apt'
+cookbook 'cron'
+cookbook 'git'
 
 group :integration do
-  cookbook "minitest-handler"
+  cookbook 'minitest-handler'
 end
