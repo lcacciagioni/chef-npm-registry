@@ -47,11 +47,19 @@ http_request 'create registry database' do
   action :put
 end
 
+log "Created database at #{_registry['url']}" do
+  not_if { __file_exists }
+end
+
 git "#{Chef::Config['file_cache_path']}/npmjs.org" do
   repository _git['url']
   reference _git['reference']
   not_if { __file_exists }
   action :sync
+end
+
+log "Cloned #{_git['url']}@#{_git['reference']}" do
+  not_if { __file_exists }
 end
 
 execute 'npm install couchdb -g' do
@@ -108,8 +116,10 @@ end
 if _replication['use_replication'] && _cron['use_cron']
   __authentication = ''
 
-  if _couchdb['username'] && _couchdb['password']
+  if !_couchdb['username'].empty?() && !_couchdb['password'].empty?()
     __authentication = "#{_couchdb['username']}:#{_couchdb['password']}@"
+
+    log "Using authentication for cron.d replication"
   end
 
   cron_d 'npm_registry' do
@@ -120,4 +130,6 @@ if _replication['use_replication'] && _cron['use_cron']
     day _cron['day']
     command %Q{curl -X POST -H "Content-Type:application/json" http://#{__authentication}localhost:#{_couchdb['port']}/_replicate -d '{"source":"#{_isaacs['registry']['url']}", "target":"registry"}'}
   end
+
+  log "Configured cron.d replication"
 end
