@@ -1,4 +1,4 @@
-chef-npm-registry [![Build Status](https://travis-ci.org/coryroloff/chef-npm-registry.png?branch=master)](https://travis-ci.org/coryroloff/chef-npm-registry)
+chef-npm-registry [![Build Status](https://travis-ci.org/coryroloff/chef-npm-registry.png?branch=master)](https://travis-ci.org/coryroloff/chef-npm-registry) [![Dependency Status](https://gemnasium.com/coryroloff/chef-npm-registry.png)](https://gemnasium.com/coryroloff/chef-npm-registry)
 ===========
 
 Installs and configures an NPM package registry using the official [NPM project layout](https://github.com/isaacs/npmjs.org). If you are installing this locally (such as with Vagrant), it is recommended you set the attributes `node['couch_db']['httpd']['bind_address']` to `"0.0.0.0"` and `node['couch_db']['httpd']['secure_rewrites']` to `false`.
