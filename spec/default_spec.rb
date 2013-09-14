@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe "#{File.basename(Dir.getwd)}::default" do
 	let(:chef_run) {
-		ChefSpec::ChefRunner.new(:evaluate_guards => true)
+		ChefSpec::ChefRunner.new(
+			:evaluate_guards => true,
+			platform: 'ubuntu',
+			version:'12.04'
+		)
 	}
 
 	before(:each){
