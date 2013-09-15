@@ -21,7 +21,7 @@ license          'Apache 2.0'
 description      'Installs and configures an NPM registry'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 name             'npm_registry'
-version          '0.1.1'
+version          '0.2.0'
 
 recipe           'npm_registry', 'Installs and configures an NPM registry'
 
