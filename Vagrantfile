@@ -12,8 +12,7 @@ Vagrant.configure('2') do |config|
       'couch_db' => {
         'config' => {
           'couchdb' => {
-            'database_dir' => '/usr/local/var/lib/couchdb',
-            'view_index_dir' => '/usr/local/var/lib/couchdb'
+            'database_dir' => '/usr/local/var/lib/couchdb'
           },
           'httpd' => {
             'bind_address' => '0.0.0.0',
@@ -22,8 +21,8 @@ Vagrant.configure('2') do |config|
         }
       },
       'npm_registry' => {
-        'couchdb' => {
-          'couch' => '/usr/local/var/lib/couchdb/registry.couch'
+        'replication' => {
+          'flavor' => 'none'
         }
       }
     }

@@ -16,14 +16,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+#
+
+node.default['npm_registry']['registry']['url'] = "#{!node['couch_db']['config']['couchdb']['httpsd'] ? 'http' : 'https'}://localhost:#{node['couch_db']['config']['httpd']['port']}"
 
 _npm_registry = node['npm_registry'];
 _git = _npm_registry['git']
-_couchdb = _npm_registry['couchdb']
+_couch_db = node['couch_db']
+_config = _couch_db['config']
+_httpd = _config['httpd']
+_couchdb = _config['couchdb']
+_daemons = _config['daemons']
 _registry = _npm_registry['registry']
 _isaacs = _npm_registry['isaacs']
 _replication = _npm_registry['replication']
-_cron = _replication['cron']
+_scheduled = _replication['scheduled']
 
 package 'curl' do
   action :install
@@ -39,15 +46,15 @@ service 'couchdb' do
   action :restart
 end
 
-__file_exists = File.exists?(_couchdb['couch'])
+__file_exists = File.exists?("#{((_couchdb['database_dir'] ? Pathname.new(_couchdb['database_dir']).cleanpath() : nil) || '/usr/local/var/lib/couchdb')}/registry.couch")
 
 http_request 'create registry database' do
-  url _registry['url']
+  url "#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"
   not_if { __file_exists }
   action :put
 end
 
-log "Created database at #{_registry['url']}" do
+log "Created registry database" do
   not_if { __file_exists }
 end
 
@@ -86,7 +93,7 @@ end
 execute 'push.sh' do
   command './push.sh'
   cwd "#{Chef::Config['file_cache_path']}/npmjs.org"
-  environment({'npm_package_config_couch' => _registry['url']})
+  environment({'npm_package_config_couch' => "#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"})
   not_if { __file_exists }
   action :run
 end
@@ -94,42 +101,52 @@ end
 execute 'load-views.sh' do
   command './load-views.sh'
   cwd "#{Chef::Config[:file_cache_path]}/npmjs.org"
-  environment({'npm_package_config_couch' => _registry['url']})
+  environment({'npm_package_config_couch' => "#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"})
   not_if { __file_exists }
   action :run
 end
 
 bash 'COPY _design/app' do
   code <<-EOH
-    curl #{_registry['url']}/_design/scratch -X COPY -H destination:'_design/app'
+    curl #{"#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"}/_design/scratch -X COPY -H destination:'_design/app'
   EOH
   not_if { __file_exists }
 end
 
-execute "couchapp push www/app.js #{_registry['url']}" do
-  command "couchapp push www/app.js #{_registry['url']}"
+execute "couchapp push www/app.js #{"#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"}" do
+  command "couchapp push www/app.js #{"#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/registry"}"
   cwd "#{Chef::Config['file_cache_path']}/npmjs.org"
   not_if { __file_exists }
   action :run
 end
 
-if _replication['use_replication'] && _cron['use_cron']
-  __authentication = ''
-
-  if !_couchdb['username'].empty?() && !_couchdb['password'].empty?()
-    __authentication = "#{_couchdb['username']}:#{_couchdb['password']}@"
-
-    log "Using authentication for cron.d replication"
-  end
-
+case _replication['flavor']
+when 'scheduled'
   cron_d 'npm_registry' do
     action :create
-    minute _cron['minute']
-    hour _cron['hour']
-    weekday _cron['weekday']
-    day _cron['day']
-    command %Q{curl -X POST -H "Content-Type:application/json" http://#{__authentication}localhost:#{_couchdb['port']}/_replicate -d '{"source":"#{_isaacs['registry']['url']}", "target":"registry"}'}
+    minute _scheduled['minute']
+    hour _scheduled['hour']
+    weekday _scheduled['weekday']
+    day _scheduled['day']
+    command %Q{curl -X POST -H "Content-Type:application/json" #{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/_replicate -d '{"source":"#{Pathname.new(_isaacs['registry']['url']).cleanpath().to_s().gsub(':/', '://')}/", "target":"registry"}'}
   end
 
-  log "Configured cron.d replication"
+  log "Configured scheduled replication"
+when 'continuous'
+  http_request 'npm_registry' do
+    url "#{Pathname.new(_registry['url']).cleanpath().to_s().gsub(':/', '://')}/_replicate"
+    action :post
+    headers(
+      'Content-Type' => 'application/json'
+    )
+    message(
+      :source => "#{Pathname.new(_isaacs['registry']['url']).cleanpath().to_s().gsub(':/', '://')}/",
+      :target => "registry",
+      :continuous => true
+    )
+  end
+
+  log 'Configured continuous replication'
+else
+  log "Skipping replication"
 end
