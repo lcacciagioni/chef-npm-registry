@@ -19,6 +19,16 @@
 require 'minitest/spec'
 require File.expand_path('../support/helpers', __FILE__)
 
+sleep(5)
+
 describe_recipe 'npm_registry::default' do
   include Helpers::NPM_Registry
+
+  it 'should query the registry database endpoints' do
+    assert_equal JSON.parse(Net::HTTP.get(URI.parse('http://localhost:5984/registry')))['db_name'], 'registry'
+    assert_equal JSON.parse(Net::HTTP.get(URI.parse('http://localhost:5984/registry/_design/app')))['_id'], '_design/app'
+    assert_equal JSON.parse(Net::HTTP.get(URI.parse('http://localhost:5984/registry/_design/ghost')))['_id'], '_design/ghost'
+    assert_equal JSON.parse(Net::HTTP.get(URI.parse('http://localhost:5984/registry/_design/scratch')))['_id'], '_design/scratch'
+    assert_equal JSON.parse(Net::HTTP.get(URI.parse('http://localhost:5984/registry/_design/ui')))['_id'], '_design/ui'
+  end
 end
