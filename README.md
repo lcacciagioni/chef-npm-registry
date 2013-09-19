@@ -1,4 +1,4 @@
-chef-npm-registry [![Build Status](https://travis-ci.org/coryroloff/chef-npm-registry.png?branch=master)](https://travis-ci.org/coryroloff/chef-npm-registry) [![Dependency Status](https://gemnasium.com/coryroloff/chef-npm-registry.png)](https://gemnasium.com/coryroloff/chef-npm-registry)
+chef-npm-registry [![Build Status](https://travis-ci.org/coryroloff/chef-npm-registry.png?branch=master)](https://travis-ci.org/coryroloff/chef-npm-registry) [![Dependency Status](https://gemnasium.com/coryroloff/chef-npm-registry.png)](https://gemnasium.com/coryroloff/chef-npm-registry) [![Code Climate](https://codeclimate.com/github/coryroloff/chef-npm-registry.png)](https://codeclimate.com/github/coryroloff/chef-npm-registry)
 ===========
 
 The npm_registry cookbook installs and configures an NPM package registry using the official [NPM project layout](https://github.com/isaacs/npmjs.org). Includes support for replicating the official isaacs NPM registry (continuously or scheduled).
