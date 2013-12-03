@@ -18,11 +18,11 @@
 #
 #
 
-node.default['npm_registry']['registry']['url'] = "#{!node['couch_db']['config']['couchdb']['httpsd'] ? 'http' : 'https'}://localhost:#{node['couch_db']['config']['httpd']['port']}"
+node.default['npm_registry']['registry']['url'] = "http://#{node.default['couch_db']['config']['httpd']['bind_address']}:#{node.default['couch_db']['config']['httpd']['port']}"
 
-_npm_registry = node['npm_registry'];
+_npm_registry = node.default['npm_registry']
 _git = _npm_registry['git']
-_couch_db = node['couch_db']
+_couch_db = node.default['couch_db']
 _config = _couch_db['config']
 _httpd = _config['httpd']
 _couchdb = _config['couchdb']
@@ -30,7 +30,7 @@ _daemons = _config['daemons']
 _registry = _npm_registry['registry']
 _isaacs = _npm_registry['isaacs']
 _replication = _npm_registry['replication']
-_scheduled = _replication['scheduled']
+_scheduled = _replication['flavor'] === "scheduled" ? _replication['scheduled'] : nil
 
 package 'curl' do
   action :install
