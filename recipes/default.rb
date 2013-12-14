@@ -17,11 +17,6 @@
 # limitations under the License.
 #
 
-#
-log "node npm_registry: #{node.npm_registry}" do
-  level :warn
-end
-
 _npm_registry = node['npm_registry']
 _git = _npm_registry['git']
 _couch_db = node['couch_db']
