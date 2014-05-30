@@ -33,6 +33,8 @@ package 'curl' do
   action :install
 end
 
+package 'build-essential'
+
 execute 'killall beam' do
   command 'killall beam'
   returns [0, 1]
